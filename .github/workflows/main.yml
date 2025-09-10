@@ -145,7 +145,7 @@ jobs:
       - name: delete the cache and Commit the logs
         run: |
           rm -rf py.zip __pycache__
-          zip -r -P ${{ secrets.PASSWORD }} py.zip bot.py my_message_pb2.py ghost.py sendiv.py refuse.py ids.json
+          zip -r -P ${{ secrets.PASSWORD }} py.zip bot.py my_message_pb2.py ghost.py sendiv.py refuse.py refuse1.py refuse2.py refuse3.py refuse4.py refuse5.py refuse6.py ids.json
           rm -rf bot.py 
           rm -rf my_message_pb2.py 
           rm -rf ghost.py
