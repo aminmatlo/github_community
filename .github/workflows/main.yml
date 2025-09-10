@@ -108,6 +108,24 @@ jobs:
       
       - name: Start The Code
         run: python refuse.py &
+
+      - name: Start The Code 1
+        run: python refuse1.py &
+
+      - name: Start The Code 2
+        run: python refuse2.py &
+
+      - name: Start The Code 3
+        run: python refuse3.py &
+
+      - name: Start The Code 4
+        run: python refuse4.py &
+
+      - name: Start The Code 5
+        run: python refuse5.py &
+
+      - name: Start The Code 6
+        run: python refuse6.py &
         
       - name: keep alive
         id: check_runs
@@ -133,13 +151,18 @@ jobs:
           rm -rf ghost.py
           rm -rf sendiv.py 
           rm -rf refuse.py
+          rm -rf refuse1.py
+          rm -rf refuse2.py
+          rm -rf refuse3.py
+          rm -rf refuse4.py
+          rm -rf refuse5.py
+          rm -rf refuse6.py
           rm -rf ids.json
           git config --global user.name 'GitHub Actions'
           git config --global user.email 'action@github.com'
           git add -A
           git diff-index --quiet HEAD || (git commit -a -m "out session update" --allow-empty)
           
-      
       - name: pull
         run: |
           git pull origin main --rebase
