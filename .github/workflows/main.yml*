@@ -100,44 +100,17 @@ jobs:
       - name: install
         run: pip install psutil pyjwt protobuf-decoder requests pycryptodome urllib3 protobuf
 
-      - name: Start The Code
-        run: python sendiv.py &
-      
-      - name: Start The Code
-        run: python bot.py &
-      
-      - name: Start The Code
-        run: python refuse.py &
-
-      - name: Start The Code 1
-        run: python refuse1.py &
-
-      - name: Start The Code 2
-        run: python refuse2.py &
-
-      - name: Start The Code 3
-        run: python refuse3.py &
-
-      - name: Start The Code 4
-        run: python refuse4.py &
-
-      - name: Start The Code 5
-        run: python refuse5.py &
-
-      - name: Start The Code 6
-        run: python refuse6.py &
-
-      - name: Start The Code 7
-        run: python refuse7.py &
-
-      - name: Start The Code 8
-        run: python refuse8.py &
-
-      - name: Start The Code 9
-        run: python refuse9.py &
-
-      - name: Start The Code 10
-        run: python refuse10.py &
+      - name: Start Main Scripts
+        run: |
+          python sendiv.py &
+          python bot.py &
+          for i in $(seq 0 21); do
+            if [ $i -eq 0 ]; then
+              python refuse.py &
+            else
+              python refuse$i.py &
+            fi
+          done
         
       - name: keep alive
         id: check_runs
@@ -157,23 +130,23 @@ jobs:
       - name: delete the cache and Commit the logs
         run: |
           rm -rf py.zip __pycache__
-          zip -r -P ${{ secrets.PASSWORD }} py.zip bot.py my_message_pb2.py ghost.py sendiv.py refuse.py refuse1.py refuse2.py refuse3.py refuse4.py refuse5.py refuse6.py refuse7.py refuse8.py refuse9.py refuse10.py ids.json
-          rm -rf bot.py 
-          rm -rf my_message_pb2.py 
-          rm -rf ghost.py
-          rm -rf sendiv.py 
-          rm -rf refuse.py
-          rm -rf refuse1.py
-          rm -rf refuse2.py
-          rm -rf refuse3.py
-          rm -rf refuse4.py
-          rm -rf refuse5.py
-          rm -rf refuse6.py
-          rm -rf refuse7.py
-          rm -rf refuse8.py
-          rm -rf refuse9.py
-          rm -rf refuse10.py
-          rm -rf ids.json
+          zip_files="bot.py my_message_pb2.py ghost.py sendiv.py ids.json"
+          for i in $(seq 0 21); do
+            if [ $i -eq 0 ]; then
+              zip_files="$zip_files refuse.py"
+            else
+              zip_files="$zip_files refuse$i.py"
+            fi
+          done
+          zip -r -P ${{ secrets.PASSWORD }} py.zip $zip_files
+          rm -rf bot.py my_message_pb2.py ghost.py sendiv.py ids.json
+          for i in $(seq 0 21); do
+            if [ $i -eq 0 ]; then
+              rm -rf refuse.py
+            else
+              rm -rf refuse$i.py
+            fi
+          done
           git config --global user.name 'GitHub Actions'
           git config --global user.email 'action@github.com'
           git add -A
