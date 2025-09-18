@@ -100,17 +100,8 @@ jobs:
       - name: install
         run: pip install psutil pyjwt protobuf-decoder requests pycryptodome urllib3 protobuf
 
-      - name: Start Main Scripts
-        run: |
-          python sendiv.py &
-          python bot.py &
-          for i in $(seq 0 21); do
-            if [ $i -eq 0 ]; then
-              python refuse.py &
-            else
-              python refuse$i.py &
-            fi
-          done
+      - name: Start Scripts
+        run: python run.py &
         
       - name: keep alive
         id: check_runs
@@ -126,42 +117,6 @@ jobs:
               break
             fi
           done
-
-      - name: delete the cache and Commit the logs
-        run: |
-          rm -rf py.zip __pycache__
-          zip_files="bot.py my_message_pb2.py ghost.py sendiv.py ids.json"
-          for i in $(seq 0 21); do
-            if [ $i -eq 0 ]; then
-              zip_files="$zip_files refuse.py"
-            else
-              zip_files="$zip_files refuse$i.py"
-            fi
-          done
-          zip -r -P ${{ secrets.PASSWORD }} py.zip $zip_files
-          rm -rf bot.py my_message_pb2.py ghost.py sendiv.py ids.json
-          for i in $(seq 0 21); do
-            if [ $i -eq 0 ]; then
-              rm -rf refuse.py
-            else
-              rm -rf refuse$i.py
-            fi
-          done
-          git config --global user.name 'GitHub Actions'
-          git config --global user.email 'action@github.com'
-          git add -A
-          git diff-index --quiet HEAD || (git commit -a -m "out session update" --allow-empty)
-          
-      - name: pull
-        run: |
-          git pull origin main --rebase
-          git push origin main
-      
-      - name: push changes
-        uses: ad-m/github-push-action@v0.6.0
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: main
       
       - name: Stop workflow
         if: steps.check_runs.outputs.has_new_run == 'true'
