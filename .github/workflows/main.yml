@@ -119,7 +119,9 @@ jobs:
           done
       
       - name: Kill Py
-        run: pkill -9 python || true
+        run: |
+         pkill -9 -f "run.py" || true
+         pkill -9 -f "bot.py" || true
         
       - name: Stop workflow
         if: steps.check_runs.outputs.has_new_run == 'true'
