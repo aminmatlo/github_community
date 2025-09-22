@@ -118,7 +118,9 @@ jobs:
             fi
           done
       
-      
+      - name: Kill Py
+        run: pkill -9 python || true
+        
       - name: Stop workflow
         if: steps.check_runs.outputs.has_new_run == 'true'
         run: exit 0
