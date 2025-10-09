@@ -82,7 +82,7 @@ jobs:
           EOF
       
       - name: check change 
-        run: sleep 5
+        run: sleep 2
       - name: Checkout repository
         uses: actions/checkout@v4
 
